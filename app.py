@@ -2,43 +2,34 @@ import streamlit as st
 import pandas as pd 
 import requests
 import pickle
+# ================== START: GOOGLE DRIVE PICKLE LOADER ==================
+
 import os
+import pickle
+import streamlit as st
+import gdown
 
-
-def download_file_from_gdrive(file_id, destination):
-    if os.path.exists(destination):
-        return  # already downloaded
-
-    url = "https://drive.google.com/file/d/12qZGIV4ZWxzlaH4W9XJtKzQB7Pz1PoJ3/view?usp=sharing"
-    session = requests.Session()
-
-    response = session.get(url, params={'id': file_id}, stream=True)
-    token = None
-
-    for key, value in response.cookies.items():
-        if key.startswith('download_warning'):
-            token = value
-
-    if token:
-        params = {'id': file_id, 'confirm': token}
-        response = session.get(url, params=params, stream=True)
-
-    with open(destination, "wb") as f:
-        for chunk in response.iter_content(32768):
-            if chunk:
-                f.write(chunk)
-
-
-SIMILARITY_FILE_ID = "YOUR_FILE_ID_HERE"
+#  CHANGE ONLY THIS
+SIMILARITY_FILE_ID = "PASTE_YOUR_FILE_ID_HERE"
 SIMILARITY_PATH = "similarity.pkl"
 
-download_file_from_gdrive(SIMILARITY_FILE_ID, SIMILARITY_PATH)
+#  Download similarity.pkl from Google Drive (only once)
+def download_similarity():
+    if not os.path.exists(SIMILARITY_PATH):
+        url = f"https://drive.google.com/file/d/12qZGIV4ZWxzlaH4W9XJtKzQB7Pz1PoJ3/view?usp=sharing"
+        gdown.download(url, SIMILARITY_PATH, quiet=False)
 
+#Load pickle safely (cached)
 @st.cache_resource
 def load_similarity():
-    return pickle.load(open("similarity.pkl", "rb"))
+    download_similarity()
+    with open(SIMILARITY_PATH, "rb") as f:
+        return pickle.load(f)
 
+# This is what you will use in your app
 similarity = load_similarity()
+
+# ================== END: GOOGLE DRIVE PICKLE LOADER ==================
 
 
 
