@@ -2,6 +2,46 @@ import streamlit as st
 import pandas as pd 
 import requests
 import pickle
+import os
+
+
+def download_file_from_gdrive(file_id, destination):
+    if os.path.exists(destination):
+        return  # already downloaded
+
+    url = "https://drive.google.com/file/d/12qZGIV4ZWxzlaH4W9XJtKzQB7Pz1PoJ3/view?usp=sharing"
+    session = requests.Session()
+
+    response = session.get(url, params={'id': file_id}, stream=True)
+    token = None
+
+    for key, value in response.cookies.items():
+        if key.startswith('download_warning'):
+            token = value
+
+    if token:
+        params = {'id': file_id, 'confirm': token}
+        response = session.get(url, params=params, stream=True)
+
+    with open(destination, "wb") as f:
+        for chunk in response.iter_content(32768):
+            if chunk:
+                f.write(chunk)
+
+
+SIMILARITY_FILE_ID = "YOUR_FILE_ID_HERE"
+SIMILARITY_PATH = "similarity.pkl"
+
+download_file_from_gdrive(SIMILARITY_FILE_ID, SIMILARITY_PATH)
+
+@st.cache_resource
+def load_similarity():
+    return pickle.load(open("similarity.pkl", "rb"))
+
+similarity = load_similarity()
+
+
+
 
 movies_dict = pickle.load(open("movies_dict.pkl","rb"))
 movies = pd.DataFrame(movies_dict)
