@@ -122,7 +122,7 @@ import gdown
 import pandas as pd
 import requests
 
-# 🔴 PUT YOUR REAL GOOGLE DRIVE FILE ID HERE
+# ✅ GOOGLE DRIVE FILE ID (CONFIRMED)
 SIMILARITY_FILE_ID = "12qZGIV4ZWxzlaH4W9XJtKzQB7Pz1PoJ3"
 SIMILARITY_PATH = "similarity.pkl"
 
@@ -139,7 +139,7 @@ def load_similarity():
     with open(SIMILARITY_PATH, "rb") as f:
         return pickle.load(f)
 
-# Global similarity object
+# Global similarity matrix
 similarity = load_similarity()
 
 # ================== LOAD MOVIES DATA ==================
