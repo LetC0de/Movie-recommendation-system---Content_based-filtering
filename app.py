@@ -44,7 +44,7 @@ if st.button('Recommend'):
     for i, col in enumerate(cols):
         with col:
             st.markdown(
-                f"<h3 min-height:60px'>{names[i]}</h3>",
+                f"<h4 min-height:60px'>{names[i]}</h4>",
                 unsafe_allow_html=True
             )
             st.image(posters[i], use_container_width=True)
