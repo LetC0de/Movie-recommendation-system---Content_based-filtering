@@ -112,21 +112,21 @@
 
 
 
-
-# ================== GOOGLE DRIVE PICKLE LOADER ==================
+# ================== GOOGLE DRIVE NUMPY LOADER ==================
 
 import os
-import pickle
 import streamlit as st
 import gdown
+import numpy as np
 import pandas as pd
 import requests
+import pickle
 
-# ✅ GOOGLE DRIVE FILE ID (CONFIRMED)
-SIMILARITY_FILE_ID = "12qZGIV4ZWxzlaH4W9XJtKzQB7Pz1PoJ3"
-SIMILARITY_PATH = "similarity.pkl"
+# 🔴 GOOGLE DRIVE FILE ID FOR similarity.npy
+SIMILARITY_FILE_ID = "1uVE4oAgL2C12tfYTtPlcOCRvidhkaT__"
+SIMILARITY_PATH = "similarity.npy"
 
-# Download similarity.pkl only once
+# Download similarity.npy only once
 def download_similarity():
     if not os.path.exists(SIMILARITY_PATH):
         url = f"https://drive.google.com/uc?id={SIMILARITY_FILE_ID}"
@@ -136,10 +136,8 @@ def download_similarity():
 @st.cache_resource
 def load_similarity():
     download_similarity()
-    with open(SIMILARITY_PATH, "rb") as f:
-        return pickle.load(f)
+    return np.load(SIMILARITY_PATH)
 
-# Global similarity matrix
 similarity = load_similarity()
 
 # ================== LOAD MOVIES DATA ==================
